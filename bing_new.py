@@ -27,6 +27,7 @@ class Bing:
         """get the Image object list from given argument"""
         url = self.bing_url + "?" + "&".join(
             [item[0] + str(item[1]) for item in self.bing_url_parameter.items()])
+        print(url)
         self.bing_json = requests.get(url=url).json()
         self.wallpaper_image_list = [
             BingImage(urlbase=image["urlbase"], url=image["url"], image_copyright=image["copyright"],
@@ -36,17 +37,22 @@ class Bing:
     def download_wallpaper_to_local_disk(self):
         """download wallpapers to local disk, both jpg and bmp version"""
         for image in self.wallpaper_image_list:
+            print(image)
+            print(self.bing_url_base + image.url)
             r = requests.get(url=self.bing_url_base + image.url)
             wallpaper_image_file_name = self.local_disk + str(
-                image.urlbase.split("/")[-1:][0]) + "." + Bing.JPG_FILE_EXTENSION
+                image.urlbase.split("=")[-1:][0]) + "." + Bing.JPG_FILE_EXTENSION
             with open(wallpaper_image_file_name, mode='wb')as f:
                 f.write(r.content)  # save the original jpg version
             image.image_file_name_bmp = wallpaper_image_file_name.replace(Bing.JPG_FILE_EXTENSION,
                                                                           Bing.BMP_FILE_EXTENSION)
-            Image.open(wallpaper_image_file_name).save(
-                wallpaper_image_file_name.replace(Bing.JPG_FILE_EXTENSION, Bing.BMP_FILE_EXTENSION),
-                Bing.BMP_FILE_EXTENSION)  # convert jpg to bmp and save it
-
+            try:
+                Image.open(wallpaper_image_file_name).save(
+                    wallpaper_image_file_name.replace(Bing.JPG_FILE_EXTENSION, Bing.BMP_FILE_EXTENSION),
+                    Bing.BMP_FILE_EXTENSION)  # convert jpg to bmp and save it
+            except Exception as e:
+                print("Error:", e)
+                continue
 
 class BingImage:
 
@@ -66,16 +72,16 @@ if __name__ == "__main__":
     # }
     #
     # # print("&".join([item[0] + str(item[1]) for item in temp.items()]))
-    # bing = Bing(bing_url_parameter_n=1)
-    # bing.get_wallpaper_data()
-    # bing.download_wallpaper_to_local_disk()
+    bing = Bing(bing_url_parameter_n=1)
+    bing.get_wallpaper_data()
+    bing.download_wallpaper_to_local_disk()
 
-    bing = Bing()
-    print(bing.__dict__.keys())
-    print(bing.__class__.__bases__)
-    # bing.haha = "hehe"
-    def print_haha(obj):
-        return obj.bing_url_method
-    Bing.haha = print_haha
-    print(bing.__dict__.keys())
-    print(bing.haha())
+    # bing = Bing()
+    # print(bing.__dict__.keys())
+    # print(bing.__class__.__bases__)
+    # # bing.haha = "hehe"
+    # def print_haha(obj):
+    #     return obj.bing_url_method
+    # Bing.haha = print_haha
+    # print(bing.__dict__.keys())
+    # print(bing.haha())

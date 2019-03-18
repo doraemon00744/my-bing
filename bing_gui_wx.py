@@ -79,8 +79,11 @@ class BingWxConcrete(bing_gui_wxform.BingWx):
     def show_wallpaper(self):
         wall_paper_img = wx.Image(self.img_local_addr_list[self.img_current_idx],
                                   wx.BITMAP_TYPE_ANY)
-        wall_paper_img = wall_paper_img.Scale(640, 360)
-        self.img_bitmap.SetBitmap(wall_paper_img.ConvertToBitmap())
+        try:
+            wall_paper_img = wall_paper_img.Scale(640, 360)
+            self.img_bitmap.SetBitmap(wall_paper_img.ConvertToBitmap())
+        except:
+            pass
         img_enddate = self.bing.wallpaper_image_list[
             self.img_current_idx].enddate
         img_enddate = img_enddate[0:4] + "年" + img_enddate[4:6] + "月" + img_enddate[6:] + "日"
