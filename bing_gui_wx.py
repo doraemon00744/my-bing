@@ -125,3 +125,5 @@ app = wx.App()
 bing_concrete = BingWxConcrete()
 bing_concrete.Show()
 app.MainLoop()
+# 打exe包脚本
+# pyinstaller -F -w bing_gui_wx.py -i bing128.ico
